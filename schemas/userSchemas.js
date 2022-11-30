@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 
-const subscriptionTypes = ['basic', 'weighing', 'accountant', 'owner'];
+const subscriptionTypes = ['basic', 'weighing', 'accountant', 'manager', 'owner'];
 
 const userDbSchema = new mongoose.Schema(
   {
@@ -57,9 +57,8 @@ const loginSchema = Joi.object({
 });
 
 const subscriptionSchema = Joi.object({
-  subscription: Joi.string()
-    .valid(...subscriptionTypes)
-    .required(),
+  email: Joi.string().email().required(),
+  subscription: Joi.string().valid(...subscriptionTypes).required(),
 });
 
 const verifyEmailSchema = Joi.object({
