@@ -1,11 +1,12 @@
 const weighingsRouter = require("express").Router();
 
-const { authService } = require("../middlewares");
+const { authService, validationBody } = require('../middlewares');
 const { weighingsController } = require("../controller");
+const { weighingJoiSchema } = require("../schemas");
 
 weighingsRouter.use(authService);
 
 weighingsRouter.get("/", weighingsController.getWeighings);
-weighingsRouter.post("/", weighingsController.addWeighing);
+weighingsRouter.post('/', validationBody(weighingJoiSchema.addWeighing), weighingsController.addWeighing);
 
 module.exports = weighingsRouter;
