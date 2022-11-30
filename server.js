@@ -3,8 +3,6 @@ require("dotenv").config();
 const { app } = require("./app");
 const { DB_HOST, SERVER_PORT = 8080 } = process.env;
 
-const { mailInterface } = require("./utils");
-
 async function connectMongoose() {
 	const mongoose = require("mongoose");
 
@@ -15,6 +13,8 @@ async function connectMongoose() {
 }
 
 function connectMail() {
+	const { mailInterface } = require("./utils");
+
 	mailInterface.verify();
 }
 

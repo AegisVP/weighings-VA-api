@@ -1,1 +1,4 @@
-module.exports = {weighingsController:require('./weighingsController')}
+module.exports = {
+	weighingsController: require("./weighingsController"),
+	usersController: require("./usersController"),
+};

@@ -1,1 +1,4 @@
-module.exports = { weighingsRouter: require("./weighingsRouter") };
+module.exports = {
+  weighingsRouter: require('./weighingsRouter'),
+  usersRouter: require('./usersRouter'),
+};

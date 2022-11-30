@@ -1,9 +1,10 @@
 const weighingsRouter = require("express").Router();
 
-// const { authService } = require("../middlewares");
+const { authService } = require("../middlewares");
 const { weighingsController } = require("../controller");
 
-// router.use(authService);
+weighingsRouter.use(authService);
+
 weighingsRouter.get("/", weighingsController.getWeighings);
 weighingsRouter.post("/", weighingsController.addWeighing);
 

@@ -1,3 +1,4 @@
-const { weighingDbSchema } = require("./weighingsSchema");
+const { weighingDbSchema } = require("./weighingSchema");
+const { userDbSchema, userJoiSchemas } = require("./userSchemas");
 
-module.exports = { weighingDbSchema };
+module.exports = { weighingDbSchema, userDbSchema, userJoiSchemas };
