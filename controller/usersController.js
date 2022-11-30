@@ -54,17 +54,21 @@ async function currentUser(req, res, next) {
   });
 }
 
-async function updateSubscription(req, res, next) {  // TODO: change logic
-  // const { user, subscription } = req.body;
+async function updateSubscription(req, res, next) {
+  if (req.user.subscription !== 'owner' && req.user.subscription !== 'manager') return next(requestError(401, 'Not authorized', 'NotQualified'));
+  if (req.user.email === req.body.email) return next(requestError(400, 'Can not change own access level', 'CantUpdateSelf'));
 
-  // const result = await User.findByIdAndUpdate(
-  // 	req.user._id,
-  // 	{ subscription },
-  // 	{ new: true }
-  // );
+  const updateUser = await User.findOne({ email: req.body.email });
+  if (!updateUser) return next(requestError(404, 'No such user', 'NoUserToUpdate'));
 
-  // return res.json({ email: result.email, subscription: result.subscription });
-  return res.json({ message: 'TODO: rewrite logic to change subscription if authorized as owner' });
+  if (req.user.subscription === 'manager') {
+    if (updateUser.subscription === 'owner') return next(requestError(401, 'Not authorized', 'CantModifyOwner'));
+    if (req.body.subscription === 'owner') return next(requestError(401, 'Not authorized', 'CantPromoteToOwner'));
+  }
+
+  const result = await User.findOneAndUpdate({ email: req.body.email }, { subscription: req.body.subscription }, { new: true });
+
+  return res.json({ email: result.email, subscription: result.subscription });
 }
 
 const verifyUserEmail = async (req, res, next) => {
