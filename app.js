@@ -4,13 +4,13 @@ const cors = require('cors');
 
 const { usersRouter, weighingsRouter } = require('./routes');
 
-const app = express();
+const app = express()
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
-app.use(morgan(formatsLogger));
-app.use(cors());
-app.use(express.json());
+app.use(logger(formatsLogger))
+app.use(cors())
+app.use(express.json())
 
 app.use('/api/users', usersRouter);
 app.use('/api/weighings', weighingsRouter);
@@ -39,4 +39,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = { app };
+module.exports = app
