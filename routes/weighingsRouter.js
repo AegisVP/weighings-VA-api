@@ -7,6 +7,6 @@ const { weighingJoiSchema } = require("../schemas");
 weighingsRouter.use(authService);
 
 weighingsRouter.get("/", weighingsController.getWeighings);
-weighingsRouter.post('/', validationBody(weighingJoiSchema.addWeighing), weighingsController.addWeighing);
+weighingsRouter.post('/', weighingsController.addWeighing);
 
 module.exports = weighingsRouter;

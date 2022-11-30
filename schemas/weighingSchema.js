@@ -36,7 +36,7 @@ const sourcesList = [
   '36',
 ];
 
-const destinationsList = ['Склад(бригада)', 'Елеватор', 'Отгрузка'];
+const destinationsList = ['Елеватор', 'Склад(бригада)', 'Отгрузка'];
 
 const weighingDbSchema = new Schema(
   {
@@ -108,6 +108,9 @@ const weighingDbSchema = new Schema(
   }
 );
 
+// weighingDbSchema.methods.weighing.netto = function () {
+//   return `${this.firstName} ${this.lastName}`;
+// };
 weighingDbSchema.virtual('weighing.netto').get(function () {
   return this.weighing.brutto - this.weighing.tare;
 });
