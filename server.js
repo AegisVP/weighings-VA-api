@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const { app } = require('./app');
-const { DB_HOST, SERVER_PORT = 8080 } = process.env;
+const { DB_HOST, SERVER_PORT: PORT = 8080 } = process.env;
 
 async function connectMongoose() {
   const mongoose = require('mongoose');
@@ -23,8 +23,8 @@ async function main() {
     connectMail();
     connectMongoose();
 
-    app.listen(SERVER_PORT, () => {
-      console.log(`Server is listening: http://127.0.0.1:${SERVER_PORT}`);
+    app.listen(PORT, () => {
+      console.log(`Server is listening: http://127.0.0.1:${PORT}`);
     });
   } catch (error) {
     console.error('Error:', error.message);
