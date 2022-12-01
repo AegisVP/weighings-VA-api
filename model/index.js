@@ -1,4 +1,4 @@
 module.exports = {
-  Weighing: require('./weighingModel'),
+  Weighings: require('./weighingsModel'),
   User: require('./userModel'),
 };

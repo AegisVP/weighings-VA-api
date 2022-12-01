@@ -38,7 +38,7 @@ const sourcesList = [
 
 const destinationsList = ['Елеватор', 'Склад(бригада)', 'Отгрузка'];
 
-const weighingDbSchema = new Schema(
+const weighingsDbSchema = new Schema(
   {
     date: {
       type: Date,
@@ -76,11 +76,15 @@ const weighingDbSchema = new Schema(
       },
     },
     weighing: {
+      tare: {
+        type: Number,
+        required: true,
+      },
       brutto: {
         type: Number,
         required: true,
       },
-      tare: {
+      netto: {
         type: Number,
         required: true,
       },
@@ -108,13 +112,6 @@ const weighingDbSchema = new Schema(
   }
 );
 
-// weighingDbSchema.methods.weighing.netto = function () {
-//   return `${this.firstName} ${this.lastName}`;
-// };
-weighingDbSchema.virtual('weighing.netto').get(function () {
-  return this.weighing.brutto - this.weighing.tare;
-});
-
 const addSchema = Joi.object({
   date: Joi.date().required(),
   auto: {
@@ -132,21 +129,22 @@ const addSchema = Joi.object({
       .required(),
   },
   weighing: {
-    brutto: Joi.number().required(),
     tare: Joi.number().required(),
+    brutto: Joi.number().required(),
+    netto: Joi.number(),
     isIncoming: Joi.boolean().required(),
   },
   harvesters: Joi.array().items(
     Joi.object({
       fullName: Joi.string().required(),
-      weight: Joi.number().required(),
+      weight: Joi.number(),
     })
   ),
 });
 
 module.exports = {
-  weighingDbSchema,
-  weighingJoiSchema: {
+  weighingsDbSchema,
+  weighingsJoiSchema: {
     addSchema,
   },
 };
