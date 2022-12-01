@@ -73,4 +73,5 @@ module.exports = {
     subscriptionSchema,
     verifyEmailSchema,
   },
+  subscriptionTypes,
 };
