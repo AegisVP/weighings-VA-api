@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 
-const { usersRouter, weighingsRouter } = require('./routes');
+const { usersRouter, weighingsRouter, constantsRouter } = require('./routes');
 
 const app = express();
 
@@ -12,6 +12,7 @@ app.use(morgan(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/constants', constantsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/weighings', weighingsRouter);
 

@@ -50,6 +50,7 @@ async function logoutUser(req, res, next) {
 async function currentUser(req, res, next) {
   return res.json({
     email: req.user.email,
+    token: req.user.token,
     subscription: req.user.subscription,
   });
 }
@@ -79,6 +80,7 @@ const verifyUserEmail = async (req, res, next) => {
 
   mailInterface.sendEmail(mailInterface.generateWelcomeEmail({ email: user.email }));
   return res.status(200).json({ message: 'Verification successful' });
+  // TODO: redirect to login page
 };
 
 const resendVerificationEmail = async (req, res, next) => {

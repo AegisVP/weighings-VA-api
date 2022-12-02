@@ -1,5 +1,6 @@
 const { Schema } = require('mongoose');
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 
 const sourcesList = [
   'Елеватор',
@@ -46,15 +47,12 @@ const weighingsDbSchema = new Schema(
       default: Date.now,
     },
     auto: {
-      model: {
-        type: String,
+      id: {
+        type: Schema.Types.ObjectId,
+        ref: 'Auto',
         required: true,
       },
-      licensePlate: {
-        type: String,
-        required: true,
-      },
-      driverName: {
+      driver: {
         type: String,
         required: true,
       },
@@ -96,7 +94,7 @@ const weighingsDbSchema = new Schema(
     },
     harvesters: [
       {
-        fullName: {
+        name: {
           type: String,
           required: true,
         },
@@ -106,6 +104,10 @@ const weighingsDbSchema = new Schema(
         },
       },
     ],
+    createdBy: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -115,9 +117,8 @@ const weighingsDbSchema = new Schema(
 const addSchema = Joi.object({
   date: Joi.date().required(),
   auto: {
-    model: Joi.string().required(),
-    licensePlate: Joi.string().required(),
-    driverName: Joi.string().required(),
+    id: Joi.objectId().required(),
+    driver: Joi.string().required(),
   },
   crop: {
     name: Joi.string().required(),
@@ -136,7 +137,7 @@ const addSchema = Joi.object({
   },
   harvesters: Joi.array().items(
     Joi.object({
-      fullName: Joi.string().required(),
+      name: Joi.string().required(),
       weight: Joi.number(),
     })
   ),

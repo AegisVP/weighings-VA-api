@@ -1,4 +1,5 @@
 module.exports = {
-	weighingsController: require("./weighingsController"),
-	usersController: require("./usersController"),
+  weighingsController: require('./weighingsController'),
+  usersController: require('./usersController'),
+  constantsController: require('./constantsController'),
 };

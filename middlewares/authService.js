@@ -14,6 +14,8 @@ module.exports = async (req, res, next) => {
 
   const dbUser = await User.findById(decodedUser._id);
   if (!dbUser) return next(requestError(401, 'Not authorized', 'NoTokenUser'));
+  
+  if (!dbUser.isVerified) return next(requestError(401, 'Account not verified', 'NotVerified'));
 
   if (dbUser.token !== token) {
     await User.findByIdAndUpdate(dbUser._id, { token: '' });
