@@ -21,20 +21,17 @@ const getWeighings = async (req, res, next) => {
 };
 
 const addWeighing = async (req, res, next) => {
-  const subscriptionsList = (await Constants.findOne({ type: 'subscriptions' })).data;
-  const driversList = (await Constants.findOne({ type: 'drivers' })).data;
-  const sourcesList = (await Constants.findOne({ type: 'sourcesList' })).data;
-  const destinationsList = (await Constants.findOne({ type: 'destinationsList' })).data;
-  const harvestersList = (await Constants.findOne({ type: 'harvesters' })).data;
-  const cropsList = (await Constants.findOne({ type: 'crops' })).data;
-
-  console.log({ subscriptionsList });
-
-  if (req.user.subscription !== subscriptionsList[1])     return next(requestError(401, 'Not authorized', 'NotQualified'));
-  
   const warnings = [];
-
   const weighingRecord = req.body;
+  const allConstants = await Constants.find();
+  const subscriptionsList = allConstants.find(constant => constant.type === 'subscriptions').data;
+  const driversList = allConstants.find(constant => constant.type === 'drivers').data;
+  const sourcesList = allConstants.find(constant => constant.type === 'sourcesList').data;
+  const destinationsList = allConstants.find(constant => constant.type === 'destinationsList').data;
+  const harvestersList = allConstants.find(constant => constant.type === 'harvesters').data;
+  const cropsList = allConstants.find(constant => constant.type === 'crops').data;
+
+  if (req.user.subscription !== subscriptionsList[1]) return next(requestError(401, 'Not authorized', 'NotQualified'));
 
   if (driversList.indexOf(weighingRecord.auto.driver) === -1) return next(requestError(400, 'Invalid driver name', 'NoSuchName'));
   if (cropsList.indexOf(weighingRecord.crop.name) === -1) return next(requestError(400, 'Invalid crop name', 'NoSuchName'));
@@ -58,12 +55,12 @@ const addWeighing = async (req, res, next) => {
     const harvestersClone = [];
     let totalWeight = 0;
 
-    harvesters.forEach(harvester => {
-      const { name, weight } = harvester;
+    for (const { name, weight } of harvesters) {
       if (harvestersList.indexOf(name) === -1) return next(requestError(400, `Invalid harvester name ${name}`, 'NoSuchName'));
+
       totalWeight += parseInt(weight);
       harvestersClone.push({ name, weight: nettoForEachHarvester });
-    });
+    }
 
     if (totalWeight !== newNetto) {
       warnings.push('harvesters.weight replaced with calculated value');
@@ -76,7 +73,7 @@ const addWeighing = async (req, res, next) => {
   console.log(weighingRecord);
   const result = await Weighings.create(weighingRecord);
 
-  res.json({ ...(warnings.length && { warnings }), result });
+  return res.json({ ...(warnings.length && { warnings }), result });
 };
 
 module.exports = {
