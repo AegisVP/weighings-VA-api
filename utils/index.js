@@ -3,4 +3,5 @@ module.exports = {
   requestError: require('./requestError'),
   mailInterface: require('./sendgrid'),
   formatDate: require('./formatDate'),
+  allConstants: require('./allConstants'),
 };

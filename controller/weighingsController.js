@@ -1,9 +1,10 @@
-const { requestError } = require('../utils');
-const { Weighings, Constants } = require('../model');
+const { requestError, allConstants } = require('../utils');
+const { Weighings } = require('../model');
 
 const getWeighings = async (req, res, next) => {
-  const subscriptionTypes = await Constants.findOne({ type: 'subscriptions' });
-  if (req.user.subscription === subscriptionTypes[0]) return next(requestError(401, 'Not authorized', 'NotQualified'));
+  // const { subscriptionsList, driversList, sourcesList, destinationsList, harvestersList, cropsList } = allConstants;
+  const { subscriptionsList } = allConstants;
+  if (req.user.subscription === subscriptionsList[0]) return next(requestError(401, 'Not authorized', 'NotQualified'));
 
   // const searchParams = {};
   // const { source } = req.query;
@@ -23,13 +24,7 @@ const getWeighings = async (req, res, next) => {
 const addWeighing = async (req, res, next) => {
   const warnings = [];
   const weighingRecord = req.body;
-  const allConstants = await Constants.find();
-  const subscriptionsList = allConstants.find(constant => constant.type === 'subscriptions').data;
-  const driversList = allConstants.find(constant => constant.type === 'drivers').data;
-  const sourcesList = allConstants.find(constant => constant.type === 'sourcesList').data;
-  const destinationsList = allConstants.find(constant => constant.type === 'destinationsList').data;
-  const harvestersList = allConstants.find(constant => constant.type === 'harvesters').data;
-  const cropsList = allConstants.find(constant => constant.type === 'crops').data;
+  const { subscriptionsList, driversList, sourcesList, destinationsList, harvestersList, cropsList } = allConstants;
 
   if (req.user.subscription !== subscriptionsList[1]) return next(requestError(401, 'Not authorized', 'NotQualified'));
 

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { User, Constants } = require('../model');
-const { requestError } = require('../utils');
+const { User } = require('../model');
+const { requestError, allConstants } = require('../utils');
 
 module.exports = async (req, res, next) => {
   if (!req.headers.authorization) return next(requestError(401, 'Not authorized', 'NoAuthHeader'));
@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
     return next(requestError(401, 'Not authorized', 'TokenMismatch'));
   }
 
-  const subscriptionsList = (await Constants.findOne({ type: 'subscriptions' })).data;
+  const { subscriptionsList } = allConstants;
 
   if (subscriptionsList.indexOf(dbUser.subscription) === -1) {
     dbUser.subscription = subscriptionsList[0];

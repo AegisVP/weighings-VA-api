@@ -1,7 +1,7 @@
 require('dotenv').config();
-
-const { app } = require('./app');
 const { DB_HOST, SERVER_PORT: PORT = 8080 } = process.env;
+
+const { allConstants } = require('./utils');
 
 async function connectMongoose() {
   const mongoose = require('mongoose');
@@ -20,8 +20,11 @@ function connectMail() {
 
 async function main() {
   try {
+    await allConstants.updateAll();
     connectMail();
     connectMongoose();
+
+    const { app } = require('./app');
 
     app.listen(PORT, () => {
       console.log(`Server is listening on port ${PORT}`);

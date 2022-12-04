@@ -2,44 +2,9 @@ const { Schema } = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
-const sourcesList = [
-  'Елеватор',
-  'Склад(бригада)',
-  '01',
-  '02',
-  '03',
-  '04',
-  '05',
-  '06',
-  '07',
-  '08',
-  '09-1',
-  '09-2',
-  '09-3',
-  '10',
-  '11',
-  '12',
-  '13',
-  '14',
-  '14-1',
-  '15-1',
-  '15-2',
-  '16',
-  '17',
-  '18',
-  '19',
-  '20',
-  '26',
-  '30',
-  '31',
-  '32',
-  '33',
-  '36',
-];
+// const { allConstants } = require('../utils');
 
-const destinationsList = ['Елеватор', 'Склад(бригада)', 'Отгрузка'];
-
-const weighingsDbSchema = new Schema(
+const weighingDbSchema = new Schema(
   {
     date: {
       type: Date,
@@ -64,12 +29,12 @@ const weighingsDbSchema = new Schema(
       },
       source: {
         type: String,
-        enum: sourcesList,
+        // enum: allConstants.sourcesList,
         required: true,
       },
       destination: {
         type: String,
-        enum: destinationsList,
+        // enum: allConstants.destinationsList,
         required: true,
       },
     },
@@ -123,10 +88,10 @@ const addSchema = Joi.object({
   crop: {
     name: Joi.string().required(),
     source: Joi.string()
-      .valid(...sourcesList)
+      // .valid(...allConstants.sourcesList)
       .required(),
     destination: Joi.string()
-      .valid(...destinationsList)
+      // .valid(...allConstants.destinationsList)
       .required(),
   },
   weighing: {
@@ -144,8 +109,8 @@ const addSchema = Joi.object({
 });
 
 module.exports = {
-  weighingsDbSchema,
-  weighingsJoiSchema: {
+  weighingDbSchema,
+  weighingJoiSchema: {
     addSchema,
   },
 };
