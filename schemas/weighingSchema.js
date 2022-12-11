@@ -3,13 +3,26 @@ const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 // const { allConstants } = require('../utils');
+const now = new Date();
 
 const weighingDbSchema = new Schema(
   {
     date: {
-      type: Date,
-      required: true,
-      default: Date.now,
+      year: {
+        type: Number,
+        required: true,
+        default: now.getFullYear(),
+      },
+      month: {
+        type: Number,
+        required: true,
+        default: now.getMonth() + 1,
+      },
+      day: {
+        type: Number,
+        required: true,
+        default: now.getDate(),
+      },
     },
     auto: {
       id: {
@@ -80,7 +93,11 @@ const weighingDbSchema = new Schema(
 );
 
 const addSchema = Joi.object({
-  date: Joi.date().required(),
+  date: {
+    year: Joi.number().required(),
+    month: Joi.number().required(),
+    day: Joi.number().required(),
+  },
   auto: {
     id: Joi.objectId().required(),
     driver: Joi.string().required(),
