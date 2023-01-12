@@ -1,6 +1,5 @@
 require('dotenv').config();
-const { DB_HOST, SERVER_PORT: PORT = 8080 } = process.env;
-
+const { DB_HOST, PORT } = require('./config');
 const { allConstants } = require('./utils');
 
 async function connectMongoose() {

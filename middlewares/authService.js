@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../model');
 const { requestError, allConstants } = require('../utils');
+const { JWT_SECRET } = require('../config');
 
 module.exports = async (req, res, next) => {
   if (!req.headers.authorization) return next(requestError(401, 'Not authorized', 'NoAuthHeader'));
@@ -9,7 +10,7 @@ module.exports = async (req, res, next) => {
   if (authScheme !== 'Bearer') return next(requestError(401, 'Auth scheme unsupported', 'InvalidHeader'));
   if (!token) return next(requestError(401, 'Not authorized', 'InvalidHeader'));
 
-  const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
+  const decodedUser = jwt.verify(token, JWT_SECRET);
   if (!decodedUser?._id || !decodedUser?.email) return next(requestError(401, 'Not authorized', 'TokenInvalid'));
 
   const dbUser = await User.findById(decodedUser._id);

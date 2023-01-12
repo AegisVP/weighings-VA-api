@@ -1,12 +1,4 @@
-module.exports = function formatDate(date) {
-  const d = new Date(date);
-
-  let month = '' + (d.getMonth() + 1);
-  let day = '' + d.getDate();
-  const year = d.getFullYear();
-
-  if (month.length < 2) month = '0' + month;
-  if (day.length < 2) day = '0' + day;
-
-  return [year, month, day].join('-');
+module.exports = {
+  formatDate: d => `${String(d.getFullYear())}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`,
+  parseDate: d => new Date(parseInt(d.slice(0, 4)), parseInt(d.slice(4, 2)) - 1, parseInt(d.slice(6)), 0, 0, 0),
 };

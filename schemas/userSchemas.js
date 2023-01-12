@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
+const { allConstants } = require('../utils');
 
-const subscriptionTypes = ['basic', 'weighing', 'accountant', 'manager', 'owner'];
+const subscriptionTypes = allConstants.subscriptionsList;
 
 const userDbSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+    },
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -43,6 +48,7 @@ userDbSchema.method('cryptPassword', async function () {
 });
 
 const addSchema = Joi.object({
+  name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).alphanum().required(),
   subscription: Joi.string().valid(...subscriptionTypes),
@@ -61,17 +67,12 @@ const subscriptionSchema = Joi.object({
   subscription: Joi.string().valid(...subscriptionTypes).required(),
 });
 
-const verifyEmailSchema = Joi.object({
-  email: Joi.string().email().required(),
-});
-
 module.exports = {
   userDbSchema,
   userJoiSchemas: {
     addSchema,
     loginSchema,
     subscriptionSchema,
-    verifyEmailSchema,
   },
   subscriptionTypes,
 };

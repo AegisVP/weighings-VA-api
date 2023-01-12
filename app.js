@@ -1,8 +1,11 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
 
-const { usersRouter, weighingsRouter } = require('./routes');
+const { usersRouter, weighingsRouter, constantsRouter } = require('./routes');
+const { authService } = require('./middlewares');
+const swaggerDocument = require('./swagger.json');
 
 const app = express();
 
@@ -47,13 +50,22 @@ app.use(morgan(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
+app.get('/api', (_, res) => res.redirect('/api/docs'));
+app.use('/api/docs', swaggerUi.serve);
+app.use('/api/docs', swaggerUi.setup(swaggerDocument), swaggerUi.serve);
+
 app.use('/api/users', usersRouter);
-app.use('/api/weighings', weighingsRouter);
 
 app.use('/', express.static('./public'));
+
+app.use(authService);
+
+app.use('/api/weighings', weighingsRouter);
+app.use('/api/constants', constantsRouter);
+
 app.use((_, res) => res.status(404).json({ message: 'Not found' }));
 
-app.use((err, req, res, next) => {
+app.use((err, _, res) => {
   console.error(`App error handler: [${err.name}] - ${err.message}`);
 
   if (err.name === 'CastError' || err.name === 'ValidationError') {
@@ -70,7 +82,7 @@ app.use((err, req, res, next) => {
 
   return res.status(500).json({
     message: 'Internal server error',
-    details: { name: err.name, message: err.message, status: err.status },
+    details: { name: err.name, message: err.message },
   });
 });
 

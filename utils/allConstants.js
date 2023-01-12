@@ -1,3 +1,5 @@
+const { DB_HOST } = require('../config');
+
 class DbConstants {
   constructor() {
     this.allAutos = [];
@@ -15,7 +17,7 @@ class DbConstants {
 
   async updateAll() {
     const MongoClient = require('mongodb').MongoClient;
-    const client = new MongoClient(process.env.DB_HOST, { useNewUrlParser: true });
+    const client = new MongoClient(DB_HOST, { useNewUrlParser: true });
     await client.connect();
 
     const allConstantsCursor = client.db('VAgro').collection('constants');
